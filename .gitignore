@@ -1,0 +1,11 @@
+*.out
+*.swp
+*.un~
+*.o
+*.d
+*.make
+*.gch
+
+# Directories
+Binary/
+Build/obj/
