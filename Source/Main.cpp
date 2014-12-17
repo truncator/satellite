@@ -1,10 +1,10 @@
 #include "Input.hpp"
-#include "Renderer.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
 #include "World.hpp"
 #include "Entity.hpp"
 #include "Random.hpp"
+#include "Graphics/Renderer.hpp"
+#include "Graphics/Shader.hpp"
+#include "Graphics/Texture.hpp"
 
 int main()
 {
