@@ -4,9 +4,9 @@
 
 World::World()
 {
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 10000; i++)
 	{
-		glm::vec2 position = glm::vec2(Random::Int(0, 640), Random::Int(0, 480));
+		glm::vec2 position = glm::vec2(Random::Int(1280/2-20, 1280/2+20), Random::Int(720/2-20, 720/2+20));
 		glm::vec2 size = glm::vec2(32, 32);
 		glm::vec2 velocity = glm::vec2(0.0f, 0.0f);
 		glm::vec2 acceleration = glm::vec2(0.0f, 0.0f);

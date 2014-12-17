@@ -2,25 +2,27 @@
 
 #include "Precompiled.hpp"
 
+#include "SpriteBatch.hpp"
+
+//
+// Renderer
+//
+
 class Renderer
 {
-private:
-
-	struct Quad
-	{
-		GLuint m_vbo;
-		GLuint m_vao;
-	};
-
 public:
-	Renderer();
+	Renderer(int screen_width, int screen_height);
 	~Renderer();
 
 	void Clear();
 
-	void FillQuad(int x, int y, int width, int height, float r, float g, float b, float a);
-	void RenderQuad(int x, int y, int width, int height, float rotation, int u, int v, int tw, int th);
+	void Prepare();
+	void Cleanup();
+
+	SpriteBatch& GetSpriteBatch();
 
 private:
-	Quad m_quad;
+	SpriteBatch m_sprite_batch;
+	int m_screen_width;
+	int m_screen_height;
 };

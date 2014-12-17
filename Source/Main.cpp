@@ -14,7 +14,10 @@ int main()
 		return 1;
 	}
 
-	GLFWwindow* window = glfwCreateWindow(640, 480, "Satellite", nullptr, nullptr);
+	const int SCREEN_WIDTH = 1280;
+	const int SCREEN_HEIGHT = 720;
+
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Satellite", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	if (glewInit() != GLEW_OK)
@@ -33,15 +36,24 @@ int main()
 	Texture::Initialize();
 	Random::Initialize();
 
+	Renderer renderer = Renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	World world;
-	Renderer renderer;
 
 	double last_time = glfwGetTime();
 	double current_time = last_time;
 	double total_time = 0.0;
 
+	//
+	// Main Loop
+	//
+
 	while (!glfwWindowShouldClose(window))
 	{
+		//
+		// Update
+		//
+
 		glfwPollEvents();
 
 		if (Input::IsKeyDown(GLFW_KEY_ESCAPE))
@@ -55,21 +67,35 @@ int main()
 
 		world.Update(dt);
 
-		renderer.Clear();
+		//
+		// Render
+		//
+
+		renderer.Prepare();
+
+		SpriteBatch& sprite_batch = renderer.GetSpriteBatch();
+		sprite_batch.Begin();
 
 		const std::vector<Entity*> entities = world.GetEntities();
-		
+
 		for (Entity* entity : entities)
 		{
 			glm::vec2 position = entity->GetPosition();
 			glm::vec2 size = entity->GetSize();
 			float rotation = entity->GetRotation();
 
-			renderer.RenderQuad(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y, rotation + 3.141592654 / 2, 0, 0, 16, 16);
+			sprite_batch.DrawQuad(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y, rotation - 3.141592654 / 2, 0, 0, 16, 16);
 		}
+
+		sprite_batch.End();
+		renderer.Cleanup();
 
 		glfwSwapBuffers(window);
 	}
+
+	//
+	// Cleanup
+	//
 
 	glfwTerminate();
 
