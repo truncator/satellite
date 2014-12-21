@@ -20,9 +20,22 @@ void Texture::Load(const std::string& name)
 		return;
 	}
 
+	Texture::Load(name, image_data, width, height);
+
+	stbi_image_free(image_data);
+}
+
+void Texture::Load(const std::string& name, unsigned char* image_data, int width, int height)
+{
+	if (image_data == nullptr)
+	{
+		printf("Failed to load image from raw data.\n");
+		return;
+	}
+
 	GLuint id;
 	glGenTextures(1, &id);
-	glActiveTexture(GL_TEXTURE0 + 1);
+	glActiveTexture(GL_TEXTURE0 + 0);
 	glBindTexture(GL_TEXTURE_2D, id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -33,8 +46,6 @@ void Texture::Load(const std::string& name)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	stbi_image_free(image_data);
 
 	Texture::Image image;
 	image.m_id = id;
@@ -55,6 +66,7 @@ void Texture::Bind(const std::string& name)
 	if (it->second.m_binded)
 		return;
 
+	glActiveTexture(GL_TEXTURE0 + 0);
 	glBindTexture(GL_TEXTURE_2D, it->second.m_id);
-	Shader::SetUniformInt("tex", it->second.m_id);
+	Shader::SetUniformInt("tex", 0);
 }

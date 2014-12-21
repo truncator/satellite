@@ -22,6 +22,7 @@ namespace Texture
 
 	void Initialize();
 	void Load(const std::string& name);
+	void Load(const std::string& name, unsigned char* image_data, int width, int height);
 
 	void Bind(const std::string& name);
 }
