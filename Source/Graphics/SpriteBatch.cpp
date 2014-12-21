@@ -2,6 +2,7 @@
 
 SpriteBatch::SpriteBatch(unsigned int size) :
 	m_vbo(0),
+	m_index_buffer(0),
 	m_vao(0),
 	m_drawing(false),
 	m_batch_size(size),
@@ -11,8 +12,25 @@ SpriteBatch::SpriteBatch(unsigned int size) :
 {
 	glGenBuffers(1, &m_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferData(GL_ARRAY_BUFFER, m_batch_size * sizeof(SpriteBatch::Sprite), nullptr, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_batch_size * sizeof(SpriteBatch::Sprite), nullptr, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	GLuint index_data[size];
+	for (int i = 0, v = 0; i < size; i += 6, v += 4)
+	{
+		index_data[i + 0] = v + 0;
+		index_data[i + 1] = v + 1;
+		index_data[i + 2] = v + 2;
+
+		index_data[i + 3] = v + 0;
+		index_data[i + 4] = v + 2;
+		index_data[i + 5] = v + 3;
+	}
+
+	glGenBuffers(1, &m_index_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_batch_size * sizeof(GLuint), &index_data[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
@@ -24,13 +42,17 @@ SpriteBatch::SpriteBatch(unsigned int size) :
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer);
+
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 SpriteBatch::~SpriteBatch()
 {
 	glDeleteVertexArrays(1, &m_vao);
+	glDeleteBuffers(1, &m_index_buffer);
 	glDeleteBuffers(1, &m_vbo);
 }
 
@@ -114,14 +136,14 @@ void SpriteBatch::Flush()
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
 	// Buffer the queued vertex data.
-	glBufferData(GL_ARRAY_BUFFER, m_batch_size * sizeof(SpriteBatch::Sprite), nullptr, GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_batch_size * sizeof(SpriteBatch::Sprite), nullptr, GL_DYNAMIC_DRAW);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, m_current_size * sizeof(SpriteBatch::Sprite), &m_vertex_data[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Submit a draw call.
 	glBindVertexArray(m_vao);
-	glDrawArrays(GL_QUADS, 0, m_current_size * 4);
+	glDrawElements(GL_TRIANGLES, m_current_size, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	// Reset batch state.

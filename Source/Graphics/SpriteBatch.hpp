@@ -38,6 +38,7 @@ private:
 
 private:
 	GLuint m_vbo;
+	GLuint m_index_buffer;
 	GLuint m_vao;
 
 	// Batch state.
