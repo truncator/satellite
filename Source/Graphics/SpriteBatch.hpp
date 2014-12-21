@@ -12,11 +12,11 @@ class SpriteBatch
 private:
 
 	//
-	// Sprite
+	// Sprite Vertex
 	//     Used only for determining batch size and indices.
 	//
 
-	struct Sprite
+	struct SpriteVertex
 	{
 		GLfloat m_position[3];
 		GLfloat m_uv[2];
@@ -38,7 +38,6 @@ private:
 
 private:
 	GLuint m_vbo;
-	GLuint m_index_buffer;
 	GLuint m_vao;
 
 	// Batch state.

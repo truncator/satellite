@@ -2,35 +2,17 @@
 
 SpriteBatch::SpriteBatch(unsigned int size) :
 	m_vbo(0),
-	m_index_buffer(0),
 	m_vao(0),
 	m_drawing(false),
 	m_batch_size(size),
 	m_current_size(0),
-	m_vertex_data(m_batch_size * sizeof(SpriteBatch::Sprite), 0.0f),
+	m_vertex_data(m_batch_size * 6 * sizeof(SpriteBatch::SpriteVertex), 0.0f),
 	m_batch_count(0)
 {
 	glGenBuffers(1, &m_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferData(GL_ARRAY_BUFFER, m_batch_size * sizeof(SpriteBatch::Sprite), nullptr, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_batch_size * 6 * sizeof(SpriteBatch::SpriteVertex), 0, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	GLuint index_data[size];
-	for (int i = 0, v = 0; i < size; i += 6, v += 4)
-	{
-		index_data[i + 0] = v + 0;
-		index_data[i + 1] = v + 1;
-		index_data[i + 2] = v + 2;
-
-		index_data[i + 3] = v + 0;
-		index_data[i + 4] = v + 2;
-		index_data[i + 5] = v + 3;
-	}
-
-	glGenBuffers(1, &m_index_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_batch_size * sizeof(GLuint), &index_data[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
@@ -42,17 +24,13 @@ SpriteBatch::SpriteBatch(unsigned int size) :
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer);
-
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 SpriteBatch::~SpriteBatch()
 {
 	glDeleteVertexArrays(1, &m_vao);
-	glDeleteBuffers(1, &m_index_buffer);
 	glDeleteBuffers(1, &m_vbo);
 }
 
@@ -77,7 +55,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	assert(m_drawing);
 
 	// Get the current index into the queued vertex data vector.
-	int index = m_current_size * sizeof(Sprite);
+	int index = m_current_size * 6 * 5;
 
 	// Construct a model matrix for the quad.
 	glm::mat4 model_matrix = glm::translate(glm::mat4(), glm::vec3(x + width / 2, y + height / 2, 0));
@@ -92,6 +70,8 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	glm::vec3 top_left     = glm::vec3(model_matrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	// Fill the vertex data queue.
+
+	// 0
 	m_vertex_data[index + 0] = bottom_left.x;
 	m_vertex_data[index + 1] = bottom_left.y;
 	m_vertex_data[index + 2] = 0.0f;
@@ -99,6 +79,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	m_vertex_data[index + 3] = (float)u / 1024;
 	m_vertex_data[index + 4] = (float)v / 1024;
 
+	// 1
 	m_vertex_data[index + 5] = bottom_right.x;
 	m_vertex_data[index + 6] = bottom_right.y;
 	m_vertex_data[index + 7] = 0.0f;
@@ -106,6 +87,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	m_vertex_data[index + 8] = (float)(u + tw) / 1024;
 	m_vertex_data[index + 9] = (float)v / 1024;
 
+	// 2
 	m_vertex_data[index + 10] = top_right.x;
 	m_vertex_data[index + 11] = top_right.y;
 	m_vertex_data[index + 12] = 0.0f;
@@ -113,12 +95,29 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	m_vertex_data[index + 13] = (float)(u + tw) / 1024;
 	m_vertex_data[index + 14] = (float)(v + th) / 1024;
 
-	m_vertex_data[index + 15] = top_left.x;
-	m_vertex_data[index + 16] = top_left.y;
+	// 0
+	m_vertex_data[index + 15] = bottom_left.x;
+	m_vertex_data[index + 16] = bottom_left.y;
 	m_vertex_data[index + 17] = 0.0f;
 
 	m_vertex_data[index + 18] = (float)u / 1024;
-	m_vertex_data[index + 19] = (float)(v + th) / 1024;
+	m_vertex_data[index + 19] = (float)v / 1024;
+
+	// 2
+	m_vertex_data[index + 20] = top_right.x;
+	m_vertex_data[index + 21] = top_right.y;
+	m_vertex_data[index + 22] = 0.0f;
+
+	m_vertex_data[index + 23] = (float)(u + tw) / 1024;
+	m_vertex_data[index + 24] = (float)(v + th) / 1024;
+
+	// 3
+	m_vertex_data[index + 25] = top_left.x;
+	m_vertex_data[index + 26] = top_left.y;
+	m_vertex_data[index + 27] = 0.0f;
+
+	m_vertex_data[index + 28] = (float)u / 1024;
+	m_vertex_data[index + 29] = (float)(v + th) / 1024;
 
 	// Move to the next index.
 	m_current_size++;
@@ -136,14 +135,14 @@ void SpriteBatch::Flush()
 	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 
 	// Buffer the queued vertex data.
-	glBufferData(GL_ARRAY_BUFFER, m_batch_size * sizeof(SpriteBatch::Sprite), nullptr, GL_DYNAMIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, m_current_size * sizeof(SpriteBatch::Sprite), &m_vertex_data[0]);
+	glBufferData(GL_ARRAY_BUFFER, m_batch_size * 6 * sizeof(SpriteBatch::SpriteVertex), 0, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, m_current_size * 6 * sizeof(SpriteBatch::SpriteVertex), &m_vertex_data[0]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Submit a draw call.
 	glBindVertexArray(m_vao);
-	glDrawElements(GL_TRIANGLES, m_current_size, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, m_current_size * 6);
 	glBindVertexArray(0);
 
 	// Reset batch state.
