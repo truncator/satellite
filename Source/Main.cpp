@@ -5,6 +5,7 @@
 #include "Graphics/Renderer.hpp"
 #include "Graphics/Shader.hpp"
 #include "Graphics/Texture.hpp"
+#include "Transform.hpp"
 
 int main()
 {
@@ -104,12 +105,17 @@ int main()
 
 		for (Entity* entity : entities)
 		{
-			glm::vec2 position = entity->GetPosition();
-			glm::vec2 size = entity->GetSize();
-			float rotation = entity->GetRotation();
-			glm::vec4 uv = entity->GetUV();
+			Transform& transform = entity->GetTransform();
+			Material& material = entity->GetMaterial();
 
-			sprite_batch.DrawQuad(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y, rotation - 3.141592654 / 2, uv.x, uv.y, uv.z, uv.w, 0.0f);
+			glm::vec2 position = transform.GetPosition();
+			glm::vec2 size = transform.GetSize();
+			float rotation = transform.GetRotation();
+
+			glm::vec3 color = material.GetColor();
+			glm::vec4 uv = entity->GetMaterial().GetUV();
+
+			sprite_batch.DrawQuad(position - size / 2.0f, size, rotation, color, uv, 0.0f);
 		}
 
 		sprite_batch.End();
