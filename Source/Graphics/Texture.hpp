@@ -25,6 +25,7 @@ namespace Texture
 	void Load(const std::string& name, unsigned char* image_data, int width, int height);
 
 	void Bind(const std::string& name);
+	void Unbind();
 }
 
 typedef std::unordered_map<std::string, Texture::Image> TextureList;

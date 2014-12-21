@@ -108,6 +108,13 @@ void Shader::Bind(const std::string& name)
 
 	it->second.m_binded = true;
 	g_current_program = &it->second;
+
+	// Unbind other shaders.
+	for (auto other = g_programs.begin(); other != g_programs.end(); other++)
+	{
+		if (other != it)
+			other->second.m_binded = false;
+	}
 }
 
 void Shader::Unbind(const std::string& name)
@@ -127,24 +134,36 @@ void Shader::Unbind(const std::string& name)
 
 void Shader::SetUniformMatrix(const std::string& uniform, const glm::mat4& value)
 {
+	assert(g_current_program != nullptr);
+	assert(g_current_program->m_binded);
+
 	GLint location = glGetUniformLocation(g_current_program->m_id, uniform.c_str());
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Shader::SetUniformVec2(const std::string& uniform, const glm::vec2& value)
 {
+	assert(g_current_program != nullptr);
+	assert(g_current_program->m_binded);
+
 	GLint location = glGetUniformLocation(g_current_program->m_id, uniform.c_str());
 	glUniform2f(location, value.x, value.y);
 }
 
 void Shader::SetUniformVec4(const std::string& uniform, const glm::vec4& value)
 {
+	assert(g_current_program != nullptr);
+	assert(g_current_program->m_binded);
+
 	GLint location = glGetUniformLocation(g_current_program->m_id, uniform.c_str());
 	glUniform4f(location, value.x, value.y, value.z, value.w);
 }
 
 void Shader::SetUniformInt(const std::string& uniform, GLint value)
 {
+	assert(g_current_program != nullptr);
+	assert(g_current_program->m_binded);
+
 	GLint location = glGetUniformLocation(g_current_program->m_id, uniform.c_str());
 	glUniform1i(location, value);
 }

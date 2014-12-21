@@ -66,7 +66,35 @@ void Texture::Bind(const std::string& name)
 	if (it->second.m_binded)
 		return;
 
+	it->second.m_binded = true;
+
 	glActiveTexture(GL_TEXTURE0 + 0);
 	glBindTexture(GL_TEXTURE_2D, it->second.m_id);
 	Shader::SetUniformInt("tex", 0);
+
+	// Unbind other textures.
+	for (auto other = g_textures.begin(); other != g_textures.end(); other++)
+	{
+		if (other != it)
+			other->second.m_binded = false;
+	}
+}
+
+void Texture::Unbind()
+{
+	bool binded = false;
+
+	for (auto other = g_textures.begin(); other != g_textures.end(); other++)
+	{
+		if (other->second.m_binded)
+			binded = true;
+
+		other->second.m_binded = false;
+	}
+
+	if (binded)
+	{
+		glActiveTexture(GL_TEXTURE0 + 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 }

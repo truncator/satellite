@@ -33,6 +33,7 @@ void Renderer::Prepare()
 
 void Renderer::Cleanup()
 {
+	Texture::Unbind();
 	Shader::Unbind("base");
 }
 
