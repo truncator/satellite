@@ -107,8 +107,9 @@ int main()
 			glm::vec2 position = entity->GetPosition();
 			glm::vec2 size = entity->GetSize();
 			float rotation = entity->GetRotation();
+			glm::vec4 uv = entity->GetUV();
 
-			sprite_batch.DrawQuad(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y, rotation - 3.141592654 / 2, 0, 0, 16, 16);
+			sprite_batch.DrawQuad(position.x - size.x / 2, position.y - size.y / 2, size.x, size.y, rotation - 3.141592654 / 2, uv.x, uv.y, uv.z, uv.w, 0.0f);
 		}
 
 		sprite_batch.End();
