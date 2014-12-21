@@ -61,6 +61,35 @@ int main()
 	Texture::Initialize();
 	Random::Initialize();
 
+	int test_width = SCREEN_WIDTH / 2;
+	int test_height = SCREEN_HEIGHT / 2;
+
+	std::vector<unsigned char> test_data(test_width * test_height * 4, 0);
+	for (int y = 0; y < test_height; y++)
+	{
+		for (int x = 0; x < test_width; x++)
+		{
+			if (Random::Float() < 0.03f)
+			{
+				float brightness = Random::Int(20, 80);
+
+				test_data[y * test_width * 4 + x * 4 + 0] = brightness;
+				test_data[y * test_width * 4 + x * 4 + 1] = brightness;
+				test_data[y * test_width * 4 + x * 4 + 2] = brightness;
+			}
+			else
+			{
+				test_data[y * test_width * 4 + x * 4 + 0] = 0;
+				test_data[y * test_width * 4 + x * 4 + 1] = 0;
+				test_data[y * test_width * 4 + x * 4 + 2] = 0;
+			}
+
+			test_data[y * test_width * 4 + x * 4 + 3] = 255;
+		}
+	}
+
+	Texture::Load(std::string("test"), &test_data[0], test_width, test_height);
+
 	Renderer renderer = Renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	World world;
@@ -113,10 +142,16 @@ int main()
 			float rotation = transform.GetRotation();
 
 			glm::vec3 color = material.GetColor();
-			glm::vec4 uv = entity->GetMaterial().GetUV();
+			glm::vec4 uv = entity->GetMaterial().GetUV() / 1024.0f;
 
 			sprite_batch.DrawQuad(position - size / 2.0f, size, rotation, color, uv, 0.0f);
 		}
+
+		sprite_batch.End();
+		sprite_batch.Begin();
+
+		Texture::Bind("test");
+		sprite_batch.DrawQuad(glm::vec2(0.0f), glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT), 0.0f, glm::vec3(1.0f), glm::vec4(0.0f, 0.0f, test_width, test_height) / glm::vec4(test_width, test_height, test_width, test_height), 0.5f);
 
 		sprite_batch.End();
 		renderer.Cleanup();

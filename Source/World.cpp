@@ -11,11 +11,18 @@ World::World()
 		glm::vec2 velocity = glm::vec2(0.0f, 0.0f);
 		glm::vec2 acceleration = glm::vec2(0.0f, 0.0f);
 		float rotation = Random::Float(0, 2 * 3.141592654);
-		rotation = 0;
 		float rotation_velocity = Random::Float(-1.5f, 1.5f);
-		rotation_velocity = 0;
-		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec4 uv = glm::vec4(1, 1, 16, 16);
+
+		glm::vec3 color = glm::vec3(0.8f, 0.8f, 0.8f);
+
+		int primary_color = Random::Int(0, 3);
+		if (primary_color == 0)
+			color.x += Random::Float(0.1f, 0.2f);
+		else if (primary_color == 1)
+			color.y += Random::Float(0.1f, 0.2f);
+		else
+			color.z += Random::Float(0.1f, 0.2f);
 
 		Transform transform = Transform(position, size, velocity, acceleration, rotation, rotation_velocity);
 		Material material = Material(color, uv);
@@ -30,8 +37,18 @@ World::World()
 		glm::vec2 velocity = glm::vec2(0.0f, 0.0f);
 		glm::vec2 acceleration = glm::vec2(0.0f, 0.0f);
 		float rotation = 0.0f;
-		float rotation_velocity = 0.00f;
-		glm::vec3 color = glm::vec3(0.8f, 0.6f, 1.0f);
+		float rotation_velocity = 0.0f;
+
+		glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
+
+		int primary_color = Random::Int(0, 3);
+		if (primary_color == 0)
+			color.x += Random::Float(0.1f, 0.5f);
+		else if (primary_color == 1)
+			color.y += Random::Float(0.1f, 0.5f);
+		else
+			color.z += Random::Float(0.1f, 0.5f);
+
 		glm::vec4 uv = glm::vec4(1, 18, 64, 64);
 
 		Transform transform = Transform(position, size, velocity, acceleration, rotation, rotation_velocity);
