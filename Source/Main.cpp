@@ -17,12 +17,35 @@ int main()
 	const int SCREEN_WIDTH = 1280;
 	const int SCREEN_HEIGHT = 720;
 
+	// Request OpenGL 3.3 Core Profile.
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Satellite", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
+	// Vsync.
+	glfwSwapInterval(0);
+
+	/*
+	const GLubyte* gl_vendor = glGetString(GL_VENDOR);
+	const GLubyte* gl_version = glGetString(GL_VERSION);
+	const GLubyte* glsl_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+	printf("Vendor: %s\nVersion: %s\nGLSL: %s\n", gl_vendor, gl_version, glsl_version);
+	*/
+
+	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
 		printf("Failed to initialize GLEW.\n");
+		return 1;
+	}
+
+	if (!glewIsSupported("GL_VERSION_3_3"))
+	{
+		printf("OpenGL 3.3 is not supported.\n");
 		return 1;
 	}
 
