@@ -50,7 +50,7 @@ void SpriteBatch::End()
 	m_batch_count = 0;
 }
 
-void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, int u, int v, int tw, int th)
+void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, int u, int v, int tw, int th, float depth)
 {
 	assert(m_drawing);
 
@@ -74,7 +74,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	// 0
 	m_vertex_data[index + 0] = bottom_left.x;
 	m_vertex_data[index + 1] = bottom_left.y;
-	m_vertex_data[index + 2] = 0.0f;
+	m_vertex_data[index + 2] = depth;
 
 	m_vertex_data[index + 3] = (float)u / 1024;
 	m_vertex_data[index + 4] = (float)v / 1024;
@@ -82,7 +82,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	// 1
 	m_vertex_data[index + 5] = bottom_right.x;
 	m_vertex_data[index + 6] = bottom_right.y;
-	m_vertex_data[index + 7] = 0.0f;
+	m_vertex_data[index + 7] = depth;
 
 	m_vertex_data[index + 8] = (float)(u + tw) / 1024;
 	m_vertex_data[index + 9] = (float)v / 1024;
@@ -90,7 +90,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	// 2
 	m_vertex_data[index + 10] = top_right.x;
 	m_vertex_data[index + 11] = top_right.y;
-	m_vertex_data[index + 12] = 0.0f;
+	m_vertex_data[index + 12] = depth;
 
 	m_vertex_data[index + 13] = (float)(u + tw) / 1024;
 	m_vertex_data[index + 14] = (float)(v + th) / 1024;
@@ -98,7 +98,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	// 0
 	m_vertex_data[index + 15] = bottom_left.x;
 	m_vertex_data[index + 16] = bottom_left.y;
-	m_vertex_data[index + 17] = 0.0f;
+	m_vertex_data[index + 17] = depth;
 
 	m_vertex_data[index + 18] = (float)u / 1024;
 	m_vertex_data[index + 19] = (float)v / 1024;
@@ -106,7 +106,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	// 2
 	m_vertex_data[index + 20] = top_right.x;
 	m_vertex_data[index + 21] = top_right.y;
-	m_vertex_data[index + 22] = 0.0f;
+	m_vertex_data[index + 22] = depth;
 
 	m_vertex_data[index + 23] = (float)(u + tw) / 1024;
 	m_vertex_data[index + 24] = (float)(v + th) / 1024;
@@ -114,7 +114,7 @@ void SpriteBatch::DrawQuad(int x, int y, int width, int height, float rotation, 
 	// 3
 	m_vertex_data[index + 25] = top_left.x;
 	m_vertex_data[index + 26] = top_left.y;
-	m_vertex_data[index + 27] = 0.0f;
+	m_vertex_data[index + 27] = depth;
 
 	m_vertex_data[index + 28] = (float)u / 1024;
 	m_vertex_data[index + 29] = (float)(v + th) / 1024;

@@ -30,7 +30,7 @@ public:
 	void Begin();
 	void End();
 
-	void DrawQuad(int x, int y, int width, int height, float rotation, int u, int v, int tw, int th);
+	void DrawQuad(int x, int y, int width, int height, float rotation, int u, int v, int tw, int th, float depth);
 
 private:
 	// Buffer queued vertex data and submit a draw call.
