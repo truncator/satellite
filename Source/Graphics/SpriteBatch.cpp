@@ -83,8 +83,8 @@ void SpriteBatch::DrawQuad(const glm::vec2& position, const glm::vec2& size, flo
 	m_vertex_data[index + 4] = color.y;
 	m_vertex_data[index + 5] = color.z;
 
-	m_vertex_data[index + 6] = uv.x / 1024;
-	m_vertex_data[index + 7] = (uv.y + uv.w) / 1024;
+	m_vertex_data[index + 6] = uv.x;
+	m_vertex_data[index + 7] = uv.y + uv.w;
 
 	// 1
 	m_vertex_data[index + 8] = bottom_right.x;
@@ -95,8 +95,8 @@ void SpriteBatch::DrawQuad(const glm::vec2& position, const glm::vec2& size, flo
 	m_vertex_data[index + 12] = color.y;
 	m_vertex_data[index + 13] = color.z;
 
-	m_vertex_data[index + 14] = (uv.x + uv.z) / 1024;
-	m_vertex_data[index + 15] = (uv.y + uv.w) / 1024;
+	m_vertex_data[index + 14] = uv.x + uv.z;
+	m_vertex_data[index + 15] = uv.y + uv.w;
 
 	// 2
 	m_vertex_data[index + 16] = top_right.x;
@@ -107,8 +107,8 @@ void SpriteBatch::DrawQuad(const glm::vec2& position, const glm::vec2& size, flo
 	m_vertex_data[index + 20] = color.y;
 	m_vertex_data[index + 21] = color.z;
 
-	m_vertex_data[index + 22] = (uv.x + uv.z) / 1024;
-	m_vertex_data[index + 23] = uv.y / 1024;
+	m_vertex_data[index + 22] = uv.x + uv.z;
+	m_vertex_data[index + 23] = uv.y;
 
 	// 0
 	m_vertex_data[index + 24] = bottom_left.x;
@@ -119,8 +119,8 @@ void SpriteBatch::DrawQuad(const glm::vec2& position, const glm::vec2& size, flo
 	m_vertex_data[index + 28] = color.y;
 	m_vertex_data[index + 29] = color.z;
 
-	m_vertex_data[index + 30] = uv.x / 1024;
-	m_vertex_data[index + 31] = (uv.y + uv.w) / 1024;
+	m_vertex_data[index + 30] = uv.x;
+	m_vertex_data[index + 31] = uv.y + uv.w;
 
 	// 2
 	m_vertex_data[index + 32] = top_right.x;
@@ -131,8 +131,8 @@ void SpriteBatch::DrawQuad(const glm::vec2& position, const glm::vec2& size, flo
 	m_vertex_data[index + 36] = color.y;
 	m_vertex_data[index + 37] = color.z;
 
-	m_vertex_data[index + 38] = (uv.x + uv.z) / 1024;
-	m_vertex_data[index + 39] = uv.y / 1024;
+	m_vertex_data[index + 38] = uv.x + uv.z;
+	m_vertex_data[index + 39] = uv.y;
 
 	// 3
 	m_vertex_data[index + 40] = top_left.x;
@@ -143,8 +143,8 @@ void SpriteBatch::DrawQuad(const glm::vec2& position, const glm::vec2& size, flo
 	m_vertex_data[index + 44] = color.y;
 	m_vertex_data[index + 45] = color.z;
 
-	m_vertex_data[index + 46] = uv.x / 1024;
-	m_vertex_data[index + 47] = uv.y / 1024;
+	m_vertex_data[index + 46] = uv.x;
+	m_vertex_data[index + 47] = uv.y;
 
 	// Move to the next index.
 	m_current_size++;
