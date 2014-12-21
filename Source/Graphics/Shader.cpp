@@ -40,7 +40,7 @@ void Shader::Load(const std::string& name)
 		GLchar* info_log = new GLchar[length];
 		glGetShaderInfoLog(vertex_shader, length, nullptr, info_log);
 
-		printf("%s\n", info_log);
+		printf("%s.frag failed to compile:\n%s\n", path.c_str(), info_log);
 
 		delete[] info_log;
 	}
@@ -73,7 +73,7 @@ void Shader::Load(const std::string& name)
 		GLchar* info_log = new GLchar[length];
 		glGetShaderInfoLog(fragment_shader, length, nullptr, info_log);
 
-		printf("%s\n", info_log);
+		printf("%s.frag failed to compile:\n%s\n", path.c_str(), info_log);
 
 		delete[] info_log;
 	}
