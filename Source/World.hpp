@@ -19,7 +19,9 @@ public:
 	void Update(double dt);
 
 	const std::vector<Entity*>& GetEntities() const;
+	Entity* GetNearestAttractor(Entity* entity) const;
 
 private:
 	std::vector<Entity*> m_entities;
+	std::vector<Entity*> m_attractors;
 };

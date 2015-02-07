@@ -3,6 +3,7 @@
 #include "Entity.hpp"
 #include "Random.hpp"
 #include "Graphics/Renderer.hpp"
+#include "Graphics/LineRenderer.hpp"
 #include "Graphics/Shader.hpp"
 #include "Graphics/Texture.hpp"
 #include "Transform.hpp"
@@ -23,7 +24,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Satellite", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "floating", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	// Vsync.
@@ -91,6 +92,7 @@ int main()
 	Texture::Load(std::string("test"), &test_data[0], test_width, test_height);
 
 	Renderer renderer = Renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
+	LineRenderer line_renderer;
 
 	World world;
 
@@ -110,13 +112,28 @@ int main()
 
 		glfwPollEvents();
 
+		Input::Reset();
+		Input::Update();
+
 		if (Input::IsKeyDown(GLFW_KEY_ESCAPE))
 			glfwSetWindowShouldClose(window, true);
+
+		if (Input::IsKeyDown(GLFW_KEY_EQUAL))
+			renderer.Zoom(-0.5f);
+		if (Input::IsKeyDown(GLFW_KEY_MINUS))
+			renderer.Zoom(0.5f);
+		#if 0
+		if (Input::IsKeyDownNew(GLFW_KEY_EQUAL))
+			renderer.Zoom(-0.5f);
+		if (Input::IsKeyDownNew(GLFW_KEY_MINUS))
+			renderer.Zoom(0.5f);
+		#endif
 
 		last_time = current_time;
 		current_time = glfwGetTime();
 
 		double dt = current_time - last_time;
+		dt *= 48.0f;
 		total_time += dt;
 
 		world.Update(dt);
@@ -139,12 +156,24 @@ int main()
 
 			glm::vec2 position = transform.GetPosition();
 			glm::vec2 size = transform.GetSize();
-			float rotation = transform.GetRotation();
+			float rotation = transform.GetRotation() + glm::pi<float>() / 2.0f;
 
 			glm::vec3 color = material.GetColor();
 			glm::vec4 uv = entity->GetMaterial().GetUV() / 1024.0f;
 
 			sprite_batch.DrawQuad(position - size / 2.0f, size, rotation, color, uv, 0.0f);
+
+			// TODO
+			// if not planet
+			{
+				Entity* nearest = world.GetNearestAttractor(entity);
+				if (nearest == nullptr)
+					continue;
+
+				nearest->GetTransform().Attract(transform, dt);
+				line_renderer.DrawLine(position, nearest->GetTransform().GetPosition(), nearest->GetMaterial().GetColor());
+				//nearest->GetMaterial().SetColor(glm::vec3(Random::Float(), Random::Float(), Random::Float()));
+			}
 		}
 
 		sprite_batch.End();
@@ -154,6 +183,7 @@ int main()
 		sprite_batch.DrawQuad(glm::vec2(0.0f), glm::vec2(SCREEN_WIDTH, SCREEN_HEIGHT), 0.0f, glm::vec3(1.0f), glm::vec4(0.0f, 0.0f, test_width, test_height) / glm::vec4(test_width, test_height, test_width, test_height), 0.5f);
 
 		sprite_batch.End();
+		line_renderer.Draw();
 		renderer.Cleanup();
 
 		glfwSwapBuffers(window);

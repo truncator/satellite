@@ -11,6 +11,8 @@ class Material
 public:
 	Material(glm::vec3 color_current, glm::vec4 uv);
 
+	void SetColor(const glm::vec3& color);
+
 	const glm::vec3& GetColor() const;
 	const glm::vec4& GetUV() const;
 

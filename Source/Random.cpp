@@ -9,12 +9,13 @@ void Random::Initialize()
 
 float Random::Float()
 {
-	return (float)rand() / RAND_MAX;
+	std::uniform_real_distribution<> dis(0.0f, 1.0f);
+	return dis(g_gen);
 }
 
 float Random::Float(float min, float max)
 {
-	return min + Float() * (max - min);
+	return min + Random::Float() * (max - min);
 }
 
 int Random::Int(int min, int max)

@@ -4,6 +4,7 @@ void Shader::Initialize()
 {
 	Load("base");
 	Load("fill");
+	Load("line");
 	g_current_program = &g_programs.find("base")->second;
 }
 
@@ -148,6 +149,15 @@ void Shader::SetUniformVec2(const std::string& uniform, const glm::vec2& value)
 
 	GLint location = glGetUniformLocation(g_current_program->m_id, uniform.c_str());
 	glUniform2f(location, value.x, value.y);
+}
+
+void Shader::SetUniformVec3(const std::string& uniform, const glm::vec3& value)
+{
+	assert(g_current_program != nullptr);
+	assert(g_current_program->m_binded);
+
+	GLint location = glGetUniformLocation(g_current_program->m_id, uniform.c_str());
+	glUniform3f(location, value.x, value.y, value.z);
 }
 
 void Shader::SetUniformVec4(const std::string& uniform, const glm::vec4& value)

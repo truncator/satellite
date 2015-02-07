@@ -19,10 +19,13 @@ public:
 	void Prepare();
 	void Cleanup();
 
+	void Zoom(float dz);
+
 	SpriteBatch& GetSpriteBatch();
 
 private:
 	SpriteBatch m_sprite_batch;
 	int m_screen_width;
 	int m_screen_height;
+	float m_zoom;
 };

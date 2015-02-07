@@ -28,17 +28,9 @@ solution "satellite"
 
 		links
 		{
-			"GLEW",
-			"glfw3",
 			"GL",
-			"GLU",
-			"X11",
-			"Xxf86vm",
-			"Xrandr",
-			"Xcursor",
-			"Xinerama",
-			"Xi",
-			"pthread"
+			"GLEW",
+			"glfw"
 		}
 
 		pchheader "../Source/Precompiled.hpp"

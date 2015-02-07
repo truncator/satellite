@@ -34,6 +34,7 @@ namespace Shader
 
 	void SetUniformMatrix(const std::string& uniform, const glm::mat4& value);
 	void SetUniformVec2(const std::string& uniform, const glm::vec2& value);
+	void SetUniformVec3(const std::string& uniform, const glm::vec3& value);
 	void SetUniformVec4(const std::string& uniform, const glm::vec4& value);
 	void SetUniformInt(const std::string& uniform, GLint value);
 }

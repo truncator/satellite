@@ -4,9 +4,10 @@
 #include "Texture.hpp"
 
 Renderer::Renderer(int screen_width, int screen_height) :
+	m_sprite_batch(1000),
 	m_screen_width(screen_width),
 	m_screen_height(screen_height),
-	m_sprite_batch(1000)
+	m_zoom(16.0f)
 {
 }
 
@@ -23,8 +24,14 @@ void Renderer::Prepare()
 {
 	Clear();
 
-	glm::mat4 projection_matrix = glm::ortho<float>(0.0f, m_screen_width, m_screen_height, 0.0f, 0.0f, 1.0f);
+	float left = 0.0f - ((m_zoom - 1.0f) * m_screen_width / 2.0f);
+	float right = m_screen_width + ((m_zoom - 1.0f) * m_screen_width / 2.0f);
+	float bottom = m_screen_height + ((m_zoom - 1.0f) * m_screen_width / 4.0f);
+	float top = 0.0f - ((m_zoom - 1.0f) * m_screen_height / 2.0f);
+	glm::mat4 projection_matrix = glm::ortho<float>(left, right, bottom, top, 0.0f, 1.0f);
 
+	Shader::Bind("line");
+	Shader::SetUniformMatrix("projection_view", projection_matrix);
 	Shader::Bind("base");
 	Shader::SetUniformMatrix("projection_view", projection_matrix);
 
@@ -35,6 +42,14 @@ void Renderer::Cleanup()
 {
 	Texture::Unbind();
 	Shader::Unbind("base");
+}
+
+void Renderer::Zoom(float dz)
+{
+	m_zoom += dz;
+
+	if (m_zoom < 0.5f)
+		m_zoom = 0.5f;
 }
 
 SpriteBatch& Renderer::GetSpriteBatch()

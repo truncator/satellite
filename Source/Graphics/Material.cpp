@@ -5,6 +5,11 @@ Material::Material(glm::vec3 color_current, glm::vec4 uv) :
 {
 }
 
+void Material::SetColor(const glm::vec3& color)
+{
+	m_color_current = color;
+}
+
 const glm::vec3& Material::GetColor() const
 {
 	return m_color_current;
