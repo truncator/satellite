@@ -18,11 +18,14 @@ public:
 	void Attract(Transform& transform, double dt);
 	void ApplyForce(const glm::vec2& force, double dt);
 
+	void SetStatic(bool _static);
+
 	const glm::vec2& GetPosition() const;
 	const glm::vec2& GetSize() const;
 	const float GetRotation() const;
 	const float GetMass() const;
 	const float GetAttraction() const;
+	bool IsStatic() const;
 
 private:
 	glm::vec2 m_position;
@@ -32,6 +35,8 @@ private:
 	float m_rotation;
 	float m_rotation_velocity;
 	float m_mass;
+
+	bool m_static;
 
 	// Accumulated per-frame forces.
 	glm::vec2 m_forces;

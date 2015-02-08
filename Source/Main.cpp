@@ -72,17 +72,23 @@ int main()
 		{
 			if (Random::Float() < 0.03f)
 			{
-				float brightness = Random::Int(20, 80);
+				int brightness = Random::Int(20, 80);
 
 				test_data[y * test_width * 4 + x * 4 + 0] = brightness;
 				test_data[y * test_width * 4 + x * 4 + 1] = brightness;
 				test_data[y * test_width * 4 + x * 4 + 2] = brightness;
+
+				if (Random::Float() < 0.05f)
+					test_data[y * test_width * 4 + x * 4 + 0] += 40;
 			}
 			else
 			{
 				test_data[y * test_width * 4 + x * 4 + 0] = 0;
 				test_data[y * test_width * 4 + x * 4 + 1] = 0;
 				test_data[y * test_width * 4 + x * 4 + 2] = 0;
+
+				if (Random::Float() < 0.1f)
+					test_data[y * test_width * 4 + x * 4 + 2] = Random::Int(0, 15);
 			}
 
 			test_data[y * test_width * 4 + x * 4 + 3] = 255;
@@ -133,7 +139,7 @@ int main()
 		current_time = glfwGetTime();
 
 		double dt = current_time - last_time;
-		dt *= 48.0f;
+		//dt *= 48.0f;
 		total_time += dt;
 
 		world.Update(dt);
@@ -163,15 +169,14 @@ int main()
 
 			sprite_batch.DrawQuad(position - size / 2.0f, size, rotation, color, uv, 0.0f);
 
-			// TODO
-			// if not planet
+			if (!transform.IsStatic())
 			{
 				Entity* nearest = world.GetNearestAttractor(entity);
 				if (nearest == nullptr)
 					continue;
 
 				nearest->GetTransform().Attract(transform, dt);
-				line_renderer.DrawLine(position, nearest->GetTransform().GetPosition(), nearest->GetMaterial().GetColor());
+				//line_renderer.DrawLine(position, nearest->GetTransform().GetPosition(), nearest->GetMaterial().GetColor());
 				//nearest->GetMaterial().SetColor(glm::vec3(Random::Float(), Random::Float(), Random::Float()));
 			}
 		}

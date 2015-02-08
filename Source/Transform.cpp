@@ -8,6 +8,7 @@ Transform::Transform() :
 	m_rotation(0.0f),
 	m_rotation_velocity(0.0f),
 	m_mass(0.0f),
+	m_static(false),
 	m_forces(0.0f)
 {
 }
@@ -20,12 +21,18 @@ Transform::Transform(glm::vec2 position, glm::vec2 size, glm::vec2 velocity, glm
 	m_rotation(rotation),
 	m_rotation_velocity(rotation_velocity),
 	m_mass(mass),
+	m_static(false),
 	m_forces(0.0f)
 {
 }
 
 void Transform::Update(double dt)
 {
+	m_rotation += m_rotation_velocity * (float)dt;
+
+	if (m_static)
+		return;
+
 	// Verlet integration based on
 	// http://gamedev.stackexchange.com/a/41917
 	
@@ -39,7 +46,10 @@ void Transform::Update(double dt)
 	glm::vec2 new_acceleration = m_forces / m_mass;
 	m_velocity += ((new_acceleration - m_acceleration) / 2.0f) * (float)dt;
 
-	m_rotation += m_rotation_velocity * (float)dt;
+	glm::vec2 direction = glm::normalize(m_velocity);
+	m_rotation = glm::atan(direction.y / direction.x) - glm::pi<float>();
+	if (direction.x > 0.0f)
+		m_rotation -= glm::pi<float>();
 
 	// Reset forces.
 	m_forces = glm::vec2(0.0f, 0.0f);
@@ -66,6 +76,11 @@ void Transform::ApplyForce(const glm::vec2& force, double dt)
 	m_forces += force;
 }
 
+void Transform::SetStatic(bool _static)
+{
+	m_static = _static;
+}
+
 const glm::vec2& Transform::GetPosition() const
 {
 	return m_position;
@@ -88,5 +103,10 @@ const float Transform::GetMass() const
 
 const float Transform::GetAttraction() const
 {
-	return glm::sqrt(m_mass * 0.01f);
+	return glm::sqrt(m_mass * 0.1f);
+}
+
+bool Transform::IsStatic() const
+{
+	return m_static;
 }

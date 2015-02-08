@@ -4,12 +4,14 @@
 
 World::World()
 {
-	for (int i = 0; i < 200; i++)
+	#if 0
+	for (int i = 0; i < 20; i++)
 	{
-		//glm::vec2 position = glm::vec2(Random::Int(0, 1280), Random::Int(0, 720));
-		glm::vec2 position = 16.0f * glm::vec2(Random::Int(-640, 640), Random::Int(-360, 360));
+		glm::vec2 position = glm::vec2(Random::Int(0, 1280), Random::Int(0, 720));
+		//glm::vec2 position = 16.0f * glm::vec2(Random::Int(-640, 640), Random::Int(-360, 360));
 		glm::vec2 size = glm::vec2(32, 32);
-		glm::vec2 velocity = glm::vec2(0.0f, 0.0f);
+		//glm::vec2 velocity = glm::vec2(0.0f, 0.0f);
+		glm::vec2 velocity = glm::vec2(Random::Int(-5, 5), Random::Int(-5, 5));
 		glm::vec2 acceleration = glm::vec2(0.0f, 0.0f);
 		float rotation = Random::Float(0, 2 * glm::pi<float>());
 		float rotation_velocity = 0.0f;//Random::Float(-1.5f, 1.5f);
@@ -33,10 +35,10 @@ World::World()
 		m_entities.push_back(entity);
 	}
 
-	for (int i = 0; i < 25; i++)
+	for (int i = 0; i < 1; i++)
 	{
-		//glm::vec2 position = glm::vec2(Random::Int(0, 1280), Random::Int(0, 720));
-		glm::vec2 position = 16.0f * glm::vec2(Random::Int(-640, 640), Random::Int(-360, 360));
+		glm::vec2 position = glm::vec2(Random::Int(0, 1280), Random::Int(0, 720));
+		//glm::vec2 position = 16.0f * glm::vec2(Random::Int(-640, 640), Random::Int(-360, 360));
 		glm::vec2 size = glm::vec2(128, 128);
 		glm::vec2 velocity = glm::vec2(0.0f, 0.0f);
 		glm::vec2 acceleration = glm::vec2(0.0f, 0.0f);
@@ -59,9 +61,62 @@ World::World()
 		Transform transform = Transform(position, size, velocity, acceleration, rotation, rotation_velocity, mass);
 		Material material = Material(color, uv);
 
+		transform.SetStatic(true);
+
 		Entity* entity = new Entity(transform, material);
 		m_entities.push_back(entity);
 		m_attractors.push_back(entity);
+	}
+	#endif
+
+	{
+	glm::vec2 position = glm::vec2(1280, 720) / 2.0f + glm::vec2(100, 0);
+	glm::vec2 size = glm::vec2(32, 32);
+	glm::vec2 velocity = glm::vec2(0.0f, -20.0f);
+	glm::vec2 acceleration = glm::vec2(0.0f, 0.0f);
+	float rotation = -glm::pi<float>() / 2.0f;
+	float rotation_velocity = 0.0f;
+	float mass = 1.0f;
+
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec4 uv = glm::vec4(1, 1, 16, 16);
+
+	Transform transform = Transform(position, size, velocity, acceleration, rotation, rotation_velocity, mass);
+	Material material = Material(color, uv);
+
+	Entity* entity = new Entity(transform, material);
+	m_entities.push_back(entity);
+	}
+
+	{
+	glm::vec2 position = glm::vec2(1280, 720) / 2.0f;
+	glm::vec2 size = glm::vec2(128, 128);
+	glm::vec2 velocity = glm::vec2(0.0f, 0.0f);
+	glm::vec2 acceleration = glm::vec2(0.0f, 0.0f);
+	float rotation = -glm::pi<float>() / 2.0f;
+	float rotation_velocity = 0.0f;
+	float mass = 100.0f;
+
+	glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
+
+	int primary_color = Random::Int(0, 3);
+	if (primary_color == 0)
+		color.x += Random::Float(0.1f, 0.5f);
+	else if (primary_color == 1)
+		color.y += Random::Float(0.1f, 0.5f);
+	else
+		color.z += Random::Float(0.1f, 0.5f);
+
+	glm::vec4 uv = glm::vec4(1, 18, 64, 64);
+
+	Transform transform = Transform(position, size, velocity, acceleration, rotation, rotation_velocity, mass);
+	Material material = Material(color, uv);
+
+	transform.SetStatic(true);
+
+	Entity* entity = new Entity(transform, material);
+	m_entities.push_back(entity);
+	m_attractors.push_back(entity);
 	}
 }
 

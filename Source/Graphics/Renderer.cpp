@@ -7,7 +7,7 @@ Renderer::Renderer(int screen_width, int screen_height) :
 	m_sprite_batch(1000),
 	m_screen_width(screen_width),
 	m_screen_height(screen_height),
-	m_zoom(16.0f)
+	m_zoom(1.0f)
 {
 }
 
